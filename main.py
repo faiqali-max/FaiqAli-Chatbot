@@ -2,21 +2,35 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 from pathlib import Path
+import pyfiglet
+from colorama import Fore, Style, init
 
 load_dotenv()
+
 client=genai.Client()
+
+# History For The Chat Along With The Context
 history=[]
 
-# Printing The Chatbot's Name
-print("\t\t\t--------------------")
-print("\t\t\t| FAIQ ALI CHATBOT |")
-print("\t\t\t--------------------")
+print("\n\n\n")
+
+# For Pyfiglet 
+init(autoreset=True)
+
+banner = pyfiglet.figlet_format("FAIQ ALI CHATBOT", font="ansi_shadow")
+print(Fore.CYAN + banner)
+
+print(Style.BRIGHT + "                 A Chatbot With History")
+
+print(Style.DIM + "A command-line chatbot built with Google's Gemini API.")
+print(Style.DIM + "Start a new chat or load an existing .txt file as context,")
+print(Style.DIM + "and automatically save the session when you exit.\n")
 
 # Info about user and the chat
-user_name=input("What's Your Name:\n")
-print(f"Hi, {user_name} how can I help you\n")
-chat_name=input("""Give a suitable name to your chat\n \t \t OR \n 
-else open up your previous chat by writing the exact file's name for context\n:""").strip()
+user_name=input("\nWhat's Your Name:\n\n")
+print(f"\n\nHi, {user_name} how can I help you\n")
+chat_name=input("""\nGive a suitable name to your chat\n\n \t \t OR \n 
+Else open up your previous chat by writing the exact file's name for context:\n\n""").strip()
 
 # Define system prompt configuration
 system_prompt = (
@@ -93,9 +107,9 @@ while True:
     try:
 
         # Asking for the user's input
-        print("Type Quit to leave\n")
+        print("\nType Quit to leave\n")
 
-        user_input = str(input("Ask Me!\n\t\t"))
+        user_input = str(input(f"Ask Me {user_name}!\n\n\t"))
 
         if user_input.lower() == "quit":
 
@@ -103,7 +117,7 @@ while True:
 
         else:    
 
-            print(f"Thinking\n{user_name} is asking me for this:{user_input}")
+            print(f"Thinking...\n[{user_name}] is asking me for this: {user_input}")
 
             response = chat.send_message(f"User's Question: {user_input}, History: {history}" )
 
@@ -111,7 +125,7 @@ while True:
 
             history.append(f"{user_name}:{user_input}")
 
-            print(f"\n {response.text}")
+            print(f"\n[AI]:{response.text}")
 
             current_history.append(f"AI:{response.text}")
 
